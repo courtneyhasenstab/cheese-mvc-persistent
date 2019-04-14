@@ -1,9 +1,9 @@
-
 package org.launchcode.controllers;
 
 import org.launchcode.models.Cheese;
 import org.launchcode.models.data.CheeseDao;
 import org.launchcode.models.data.MenuDao;
+import org.launchcode.models.forms.AddMenuItemForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +20,10 @@ import javax.validation.Valid;
 public class Menu {
 
     @Autowired
-    MenuDao menuDao;
+    public MenuDao menuDao;
 
     @Autowired
-    CheeseDao cheeseDao;
+    public CheeseDao cheeseDao;
 
     @RequestMapping(value = "")
     public String index (Model model){
@@ -69,7 +69,7 @@ public class Menu {
 
         org.launchcode.models.Menu menu = menuDao.findOne(menuId);
 
-        org.launchcode.models.forms.Addmenuitemform form=new org.launchcode.models.forms.Addmenuitemform(menu, cheeseDao.findAll());
+        AddMenuItemForm form=new AddMenuItemForm(menu, cheeseDao.findAll());
 
         model.addAttribute("title", "Add item to menu: " + menu.getName());
         model.addAttribute("form", form);
@@ -77,7 +77,7 @@ public class Menu {
     }
 
     @RequestMapping(value="add-item", method = RequestMethod.POST)
-    public String addItem(Model model, @ModelAttribute @Valid org.launchcode.models.forms.Addmenuitemform form, Errors errors) {
+    public String addItem(Model model, @ModelAttribute @Valid AddMenuItemForm form, Errors errors) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add item to menu: ");
@@ -93,4 +93,6 @@ public class Menu {
         }
     }
 }
+
+
 
