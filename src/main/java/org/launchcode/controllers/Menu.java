@@ -1,7 +1,6 @@
 package org.launchcode.controllers;
 
 import org.launchcode.models.Cheese;
-import org.launchcode.models.Menu;
 import org.launchcode.models.data.CheeseDao;
 import org.launchcode.models.data.MenuDao;
 import org.launchcode.models.forms.AddMenuItemForm;
@@ -19,7 +18,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping(value = "menu")
-public class MenuController {
+public class Menu {
 
     @Autowired
     private MenuDao menuDao;
@@ -39,12 +38,12 @@ public class MenuController {
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String add(Model model){
         model.addAttribute("title", "Add Menu");
-        model.addAttribute(new Menu());
+        model.addAttribute(new org.launchcode.models.Menu());
         return "menu/add";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String add(Model model, @ModelAttribute @Valid Menu newMenu, Errors errors) {
+    public String add(Model model, @ModelAttribute @Valid org.launchcode.models.Menu newMenu, Errors errors) {
         if (errors.hasErrors()){
             model.addAttribute("title", "Add Menu");
             return "menu/add";
@@ -55,7 +54,7 @@ public class MenuController {
 
     @RequestMapping(value = "view/{id}", method = RequestMethod.GET)
     public String view(Model model, @PathVariable int id){
-        Menu menu = menuDao.findOne(id);
+        org.launchcode.models.Menu menu = menuDao.findOne(id);
 
         model.addAttribute("title", menu.getName());
         model.addAttribute("menu", menu);
@@ -65,7 +64,7 @@ public class MenuController {
 
     @RequestMapping(value = "add-item/{menuId}", method = RequestMethod.GET)
     public String addItem(Model model, @PathVariable int menuId) {
-        Menu menu = menuDao.findOne(menuId);
+        org.launchcode.models.Menu menu = menuDao.findOne(menuId);
 
         AddMenuItemForm itemForm = new AddMenuItemForm(menu, cheeseDao.findAll());
 
@@ -80,7 +79,7 @@ public class MenuController {
             model.addAttribute("title", "Add Item");
             return "menu/add-item/" + menuId;
         }
-        Menu menu = menuDao.findOne(itemForm.getMenuId());
+        org.launchcode.models.Menu menu = menuDao.findOne(itemForm.getMenuId());
         Cheese cheese = cheeseDao.findOne(itemForm.getCheeseId());
 
         menu.addItem(cheese);
