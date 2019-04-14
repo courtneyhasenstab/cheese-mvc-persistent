@@ -1,5 +1,7 @@
 package org.launchcode.controllers;
 
+
+import org.launchcode.models.Category;
 import org.launchcode.models.data.CategoryDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,45 +13,45 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 
-
 @Controller
 @RequestMapping("category")
-public class Category {
+public class CategoryController {
 
     @Autowired
     private CategoryDao categoryDao;
 
-    @RequestMapping("")
+    @RequestMapping(value="")
     public String index(Model model) {
-
         model.addAttribute("categories", categoryDao.findAll());
-        model.addAttribute("title",
-                "Categories");
+        model.addAttribute("title", "Categories");
 
         return "category/index";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String displayAddForm(Model model) {
+    @RequestMapping(value="add", method = RequestMethod.GET)
+    public String add(Model model) {
 
-        model.addAttribute(new org.launchcode.models.Category());
-        model.addAttribute("title",
-                "Add Category");
-
+        model.addAttribute("title", "Add Category");
+        model.addAttribute(new Category());
         return "category/add";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String displayAddForm(Model model, @ModelAttribute @Valid org.launchcode.models.Category
-            category, Errors errors) {
+    @RequestMapping(value="add", method = RequestMethod.POST)
+    public String add(Model model, @ModelAttribute @Valid Category category, Errors errors) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Category");
             return "category/add";
         }
+        else {
+            categoryDao.save(category);
+            return "redirect:";
+        }
 
-        categoryDao.save(category);
-        return "redirect:";
     }
+
+
+
+
 
 }
