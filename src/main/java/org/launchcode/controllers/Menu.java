@@ -1,6 +1,7 @@
 package org.launchcode.controllers;
 
 import org.launchcode.models.Cheese;
+import org.launchcode.models.Menu;
 import org.launchcode.models.data.CheeseDao;
 import org.launchcode.models.data.MenuDao;
 import org.launchcode.models.forms.AddMenuItemForm;
@@ -15,84 +16,77 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 
+
 @Controller
 @RequestMapping(value = "menu")
-public class Menu {
+public class MenuController {
 
     @Autowired
-    public MenuDao menuDao;
+    private MenuDao menuDao;
 
     @Autowired
-    public CheeseDao cheeseDao;
+    private CheeseDao cheeseDao;
 
     @RequestMapping(value = "")
-    public String index (Model model){
+    public String index(Model model) {
+
         model.addAttribute("title", "Menus");
         model.addAttribute("menus", menuDao.findAll());
+
         return "menu/index";
     }
 
-    @RequestMapping(value="add", method = RequestMethod.GET)
-    public String add(Model model) {
-
+    @RequestMapping(value = "add", method = RequestMethod.GET)
+    public String add(Model model){
         model.addAttribute("title", "Add Menu");
-        model.addAttribute(new org.launchcode.models.Menu());
+        model.addAttribute(new Menu());
         return "menu/add";
     }
 
-    @RequestMapping(value="add", method = RequestMethod.POST)
-    public String add(Model model, @ModelAttribute @Valid org.launchcode.models.Menu menu, Errors errors) {
-
-        if (errors.hasErrors()) {
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    public String add(Model model, @ModelAttribute @Valid Menu newMenu, Errors errors) {
+        if (errors.hasErrors()){
             model.addAttribute("title", "Add Menu");
             return "menu/add";
         }
-        else {
-            menuDao.save(menu);
-            return "redirect:view/" + menu.getId();
-        }
+        menuDao.save(newMenu);
+        return "redirect:view/" + newMenu.getId();
     }
 
-    @RequestMapping(value="view/{menuId}", method = RequestMethod.GET)
-    public String viewMenu(Model model, @PathVariable int menuId) {
+    @RequestMapping(value = "view/{id}", method = RequestMethod.GET)
+    public String view(Model model, @PathVariable int id){
+        Menu menu = menuDao.findOne(id);
 
-        org.launchcode.models.Menu menu = menuDao.findOne(menuId);
-        model.addAttribute("title", "Add item to menu: " + menu.getName());
-        model.addAttribute("cheeses", menu.getCheeses());
-        model.addAttribute("menuId", menu.getId());
-
+        model.addAttribute("title", menu.getName());
+        model.addAttribute("menu", menu);
         return "menu/view";
+
     }
 
-    @RequestMapping(value="add-item/{menuId}", method = RequestMethod.GET)
+    @RequestMapping(value = "add-item/{menuId}", method = RequestMethod.GET)
     public String addItem(Model model, @PathVariable int menuId) {
+        Menu menu = menuDao.findOne(menuId);
 
-        org.launchcode.models.Menu menu = menuDao.findOne(menuId);
-
-        AddMenuItemForm form=new AddMenuItemForm(menu, cheeseDao.findAll());
+        AddMenuItemForm itemForm = new AddMenuItemForm(menu, cheeseDao.findAll());
 
         model.addAttribute("title", "Add item to menu: " + menu.getName());
-        model.addAttribute("form", form);
+        model.addAttribute("form", itemForm);
         return "menu/add-item";
     }
 
-    @RequestMapping(value="add-item", method = RequestMethod.POST)
-    public String addItem(Model model, @ModelAttribute @Valid AddMenuItemForm form, Errors errors) {
+    @RequestMapping(value = "add-item/{menuId}", method = RequestMethod.POST)
+    public String addItem(Model model, @ModelAttribute @Valid AddMenuItemForm itemForm, Errors errors, @PathVariable int menuId) {
+        if(errors.hasErrors()){
+            model.addAttribute("title", "Add Item");
+            return "menu/add-item/" + menuId;
+        }
+        Menu menu = menuDao.findOne(itemForm.getMenuId());
+        Cheese cheese = cheeseDao.findOne(itemForm.getCheeseId());
 
-        if (errors.hasErrors()) {
-            model.addAttribute("title", "Add item to menu: ");
-            model.addAttribute("form", form);
-            return "menu/add-item";
-        }
-        else {
-            Cheese theCheese = cheeseDao.findOne(form.getCheeseId());
-            org.launchcode.models.Menu theMenu = menuDao.findOne(form.getMenuId());
-            theMenu.addItem(theCheese);
-            menuDao.save(theMenu);
-            return "redirect:/menu/view/" + theMenu.getId();
-        }
+        menu.addItem(cheese);
+        menuDao.save(menu);
+
+        return "redirect:../view/" + menu.getId();
     }
+
 }
-
-
-

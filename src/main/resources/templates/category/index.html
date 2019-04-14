@@ -7,14 +7,10 @@
 <h1 th:text="${title}">Default Title</h1>
 
 <nav th:replace="fragments :: navigation"></nav>
-
-<p></p>
-<p th:unless="${categories} and ${categories.size()}">no categories :(</p>
-<div >
-    <ul th:each="category : ${categories}">
-        <li th:text="${category.name}"></li>
-    </ul>
-    <a href="/category/add">Add Category</a>
-</div>
+<a href="/category/add">Add Category</a>
+<ul>
+    <li th:each="category : ${categories}"
+        th:text="${category.getName()}"></li>
+</ul>
 </body>
 </html>

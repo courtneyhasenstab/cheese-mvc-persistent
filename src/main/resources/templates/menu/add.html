@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="fragments :: head">
-    <meta charset="UTF-8"/>
-    <title th:text="${title}"></title>
+<head th:replace="fragments :: head"></head>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-</head>
 <body class="container">
+
 <h1 th:text="${title}">Default Title</h1>
-<p></p>
+
 <nav th:replace="fragments :: navigation"></nav>
-<p></p>
-<form method="post" style="max-width: 680px;" th:object="${menu}">
+
+<form method="post" style="max-width:600px;" th:object="${menu}">
     <div class="form-group">
-        <label th:for="name">Menu:</label>
-        <input class="form-control" th:field="*{name}"/>
-        <i><span th:errors="*{name}" class="text-danger"></span></i>
-        <p></p>
-        <input type="submit" value="Add Menu" />
+        <label th:for="name">Name</label>
+        <input class="form-control" th:field="*{name}" />
+        <span class="error" th:errors="*{name}"></span>
     </div>
+
+    <input type="submit" value="Add Menu" />
 </form>
+
 </body>
 </html>
