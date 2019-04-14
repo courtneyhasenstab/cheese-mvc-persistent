@@ -9,12 +9,12 @@
 <nav th:replace="fragments :: navigation"></nav>
 
 <p></p>
-<p th:unless="${categories} and ${categories.size()}">no categories :(</p>
+<p th:unless="${categories} and ${categories.size()}">You currently have no catergories! Make one now!!!</p>
 <div >
     <ul th:each="category : ${categories}">
         <li th:text="${category.name}"></li>
     </ul>
-    <a href="/category/add">Add Category</a>
+    <a href="/category/add">Create A Category</a>
 </div>
 </body>
 </html>
