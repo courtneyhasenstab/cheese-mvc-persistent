@@ -14,12 +14,18 @@ public class Category {
     private int id;
 
     @NotNull
-    @Size(min = 3, max = 15)
+    @Size(min=3, max=15)
     private String name;
 
     @OneToMany
     @JoinColumn(name = "category_id")
     private List<Cheese> cheeses = new ArrayList<>();
+
+    public Category(){}
+
+    public Category(String name) {
+        this.name = name;
+    }
 
     public int getId() {
         return id;
@@ -31,5 +37,9 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Cheese> getCheeses() {
+        return cheeses;
     }
 }
