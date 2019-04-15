@@ -14,21 +14,25 @@ public class Category {
     private int id;
 
     @NotNull
-    @Size(min=3, max=15)
+    @Size(min=3, max=15, message = "Name required. ")
     private String name;
 
     @OneToMany
     @JoinColumn(name = "category_id")
     private List<Cheese> cheeses = new ArrayList<>();
 
-    public Category() {}
-
-    public Category(String name){
-        this.name=name;
+    public Category(String name) {
+        this.name = name;
     }
+
+    public Category() { }
 
     public int getId() {
         return id;
+    }
+
+    private void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

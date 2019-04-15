@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
-
 <body class="container">
-
 <h1 th:text="${title}">Default Title</h1>
-
 <nav th:replace="fragments :: navigation"></nav>
-
-<p></p>
-<p th:unless="${categories} and ${categories.size()}">You currently have no catergories! Make one now!!!</p>
-<div >
-    <ul th:each="category : ${categories}">
-        <li th:text="${category.name}"></li>
-    </ul>
-    <a href="/category/add">Create A Category</a>
-</div>
+<section class="Lrow">
+    <div class="Lcol">
+        <hr/>
+        <a href="/category/add">Add a new category. </a>
+        <ul th:each="category : ${categories}">
+            <h4 th:text="${category.name}"></h4>
+            <hr/>
+        </ul>
+    </div>
+</section>
 </body>
 </html>

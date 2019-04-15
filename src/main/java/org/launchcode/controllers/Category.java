@@ -1,6 +1,5 @@
 package org.launchcode.controllers;
 
-
 import org.launchcode.models.data.CategoryDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,38 +18,36 @@ public class Category {
     @Autowired
     private CategoryDao categoryDao;
 
-    @RequestMapping(value="")
+
+    @RequestMapping(value = "")
     public String index(Model model) {
+
         model.addAttribute("categories", categoryDao.findAll());
-        model.addAttribute("title", "Categories");
+        model.addAttribute("title", "My Categories");
 
         return "category/index";
     }
 
-    @RequestMapping(value="add", method = RequestMethod.GET)
+    @RequestMapping(value = "add")
     public String add(Model model) {
+        model.addAttribute("title", "Add New Category");
 
-        model.addAttribute("title", "Add Category");
         model.addAttribute(new org.launchcode.models.Category());
+
         return "category/add";
     }
 
-    @RequestMapping(value="add", method = RequestMethod.POST)
+    @RequestMapping(value = "add", method = RequestMethod.POST)
     public String add(Model model, @ModelAttribute @Valid org.launchcode.models.Category category, Errors errors) {
 
+        // Check for validation errors, if exist return the form
         if (errors.hasErrors()) {
-            model.addAttribute("title", "Add Category");
+            model.addAttribute(category);
             return "category/add";
         }
-        else {
-            categoryDao.save(category);
-            return "redirect:";
-        }
-
+        // Else save category
+        categoryDao.save(category);
+        // return index
+        return "redirect:";
     }
-
-
-
-
-
 }
